@@ -21,7 +21,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: us-west-2
         
     - name: Build, tag, and push image to ECR
       env:
@@ -40,3 +40,17 @@ jobs:
 
         # Push the image to ECR
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+
+
+    - name: "Install Kubectl"
+      uses: marcofranssen/setup-kubectl@v0.3.0
+      with:
+          kubectl-version: latest
+
+
+    - name: Update kube config
+      run: aws eks update-kubeconfig --name external-secrets --region us-west-2
+
+    - name: "Deploy to EKS"
+      run : kubectl apply -f K8s/app-deployment.yml

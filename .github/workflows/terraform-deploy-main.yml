@@ -36,6 +36,10 @@ jobs:
       working-directory: ../terraform
       run: terraform plan -out=plan.tfplan
 
+    - name: Manual Approval for apply
+      uses: trstringer/manual-approval@v1
+      timeout-minutes: 60
+      
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
       working-directory: ../terraform
