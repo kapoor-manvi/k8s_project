@@ -5,5 +5,3 @@ Werkzeug==2.2.2
 opentelemetry-distro
 opentelemetry-instrumentation-flask
 opentelemetry-instrumentation-sqlalchemy
-opentelemetry-exporter-prometheus
-opentelemetry-exporter-otlp
