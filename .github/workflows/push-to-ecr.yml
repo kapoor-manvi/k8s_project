@@ -30,7 +30,7 @@ jobs:
     - name: Build, tag, and push image to ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        ECR_REPOSITORY: "transactionapi"
         IMAGE_TAG: latest
       run: |
         # Build the Docker image
