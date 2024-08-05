@@ -10,6 +10,7 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    environment: AWS
 
     steps:
     - name: Checkout code
@@ -28,14 +29,14 @@ jobs:
         aws-region: us-west-2
 
     - name: Terraform Init
-      working-directory: ./terraform
+      working-directory: ../terraform
       run: terraform init
 
     - name: Terraform Plan
-      working-directory: ./terraform
+      working-directory: ../terraform
       run: terraform plan -out=plan.tfplan
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
-      working-directory: ./terraform
+      working-directory: ../terraform
       run: terraform apply -auto-approve plan.tfplan
