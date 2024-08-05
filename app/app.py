@@ -46,7 +46,7 @@ def insert_transaction():
     db.session.add(new_transaction)
     db.session.commit()
 
-    return jsonify({"message": "Transaction added"}), 201
+    return jsonify({"message": "Transaction added successfully"}), 201
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
