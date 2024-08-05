@@ -1,0 +1,9 @@
+# requirements.txt
+Flask==2.2
+Flask-SQLAlchemy==3.0.2
+Werkzeug==2.2.2
+opentelemetry-distro
+opentelemetry-instrumentation-flask
+opentelemetry-instrumentation-sqlalchemy
+opentelemetry-exporter-prometheus
+opentelemetry-exporter-otlp

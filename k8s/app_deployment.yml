@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-api
+  namespace: external-secrets
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: transaction-api
+  template:
+    metadata:
+      labels:
+        app: transaction-api
+    spec:
+      containers:
+      - name: transaction-api
+        image: public.ecr.aws/c0v8s4a9/transactionapi:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_DB
+        - name: POSTGRES_HOST
+          value: "postgres-svc.external-secrets.svc.cluster.local"
