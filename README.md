@@ -130,3 +130,16 @@ Got it working locally by using
 
 4) CodeQL analysis doesn't work for non enterprise github repositories.
 
+
+## Refrences:
+https://aws-ia.github.io/terraform-aws-eks-blueprints/patterns/external-secrets/
+
+https://grafana.com/solutions/kubernetes/kubernetes-monitoring-introduction/?pg=dashboards&plcmt=featured-dashboard-1
+
+https://archive.eksworkshop.com/intermediate/240_monitoring/
+
+https://www.eksworkshop.com/docs/security/secrets-management/secrets-manager/external-secrets
+
+
+
+
