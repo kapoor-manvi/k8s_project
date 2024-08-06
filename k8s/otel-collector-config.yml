@@ -2,30 +2,25 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: collector-config
+  name: otel-collector
   namespace: external-secrets
 data:
-  collector.yaml: |
+  otel-collector-config: |
     receivers:
       otlp:
         protocols: 
           grpc:
-    processors:
-      batch:
-        send_batch_size: 10000
-        timeout: 5s
-    exporters:
+      jaeger:
+        endpoint: "jaeger:14250"
       prometheus:
-        endpoint: ":9090"
+        endpoint: "prometheus:9090"
       logging:
         loglevel: debug
     service:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [batch]
-          exporters: [logging]
+          exporters: [jaegar, logging]
         metrics:
           receivers: [otlp]
-          processors: [batch]
           exporters: [prometheus, logging]

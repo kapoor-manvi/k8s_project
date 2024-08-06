@@ -1,33 +1,77 @@
+# based on: https://github.com/Hashfyre/otel-k8s
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: opentelemetrycollector
-  namespace: external-secrets
+  name: otel-collector
+  labels:
+    app: opentelemetry
+    component: otel-collector
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: opentelemetrycollector
+      app: opentelemetry
+      component: otel-collector
+  minReadySeconds: 5
+  progressDeadlineSeconds: 120
+  replicas: 1
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: opentelemetrycollector
+        app: opentelemetry
+        component: otel-collector
     spec:
+      serviceAccountName: otelcontribcol
       containers:
-      - name: otelcol
-        args:
-        - --config=/conf/collector.yaml
-        image: otel/opentelemetry-collector:0.47.0
+      - command:
+          - "/otelcontribcol"
+          - "--config=/conf/otel-collector-config.yml"
+#           Memory Ballast size should be max 1/3 to 1/2 of memory.
+          - "--mem-ballast-size-mib=96"
+        image: otel/opentelemetry-collector-contrib:0.47.0
+        name: otel-collector
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        ports:
+        - containerPort: 13133 # Default endpoint for health_check
+        - containerPort: 55680 # Default endpoint for OpenTelemetry receiver.
+
         volumeMounts:
-        - mountPath: /conf
-          name: collector-config
+        - name: otel-collector-config-vol
+          mountPath: /conf
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 13133 # Health Check extension default port.
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 13133 # Health Check extension default port.
       volumes:
-      - configMap:
-          items:
-          - key: collector.yaml
-            path: collector.yaml
-          name: collector-config
-        name: collector-config
+        - name: otel-collector-config-vol
+          configMap:
+            name: otel-collector
+            items:
+              - key: otel-collector-config
+                path: otel-collector-config.yml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+spec:
+  type: ClusterIP
+  selector:
+    app: opentelemetry
+  ports:
+    - name: grpc
+      port: 55680
+      targetPort: 55680
 
 ---
 
@@ -35,7 +79,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: opentelemetrycollector
-  namespace: sample
+  namespace: external-secrets
 spec:
   ports:
   - name: otlp-grpc
@@ -46,6 +90,10 @@ spec:
     port: 9090
     protocol: TCP
     targetPort: 9090
+  - name: traces
+    port: 16686
+    protocol: TCP
+    targetPort: 16686
   selector:
     app.kubernetes.io/name: opentelemetrycollector
   type: ClusterIP
