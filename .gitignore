@@ -1,4 +1,6 @@
 .terraform
+terraform.tfstate.*
+terraform.lock.*
 .venv
 
 # Byte-compiled / optimized / DLL files
