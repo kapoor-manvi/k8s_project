@@ -113,6 +113,8 @@ Terraform: The terraform should have a S3 backend and dynamodb to maintain state
 12) Security: Implement Static Code Analysis, Security Scanning, Software Dependency Analysis within the CI/CD pipeline.
 13) Security: Implement Image and Container scanning with tools like prisma, aqua, etc. Image scanning should be included in the main eks-deploy workflow and should fail the build if any Critical vulnerability is found.
 14) Autoscaling: Use Horizontal pod scaling to scale up or down based on pod resource metrics in this case as the api and database are running in different pods.
+15) Security: Secure the external api with SSL.
+16) Package all the kubernetes manifests as a helm package and reduce the complexity of deploying resources.
 
 
 ## Challenges faced
