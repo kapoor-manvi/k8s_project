@@ -163,7 +163,7 @@ resource "kubectl_manifest" "cluster_secretstore" {
           auth:
             jwt:
               serviceAccountRef:
-                name: ${local.cluster_secretstore_sa}
+                name: external-secrets-sa
                 namespace: ${local.namespace}
   YAML
 
